@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/Colors";
 import { Text, type TextProps, StyleSheet, TextStyle } from "react-native";
 
 export type TonTextProps = TextProps & {
@@ -10,7 +11,7 @@ export type TonTextProps = TextProps & {
 
 export function TonText({
   uistyle,
-  color = "red",
+  color = Colors.dark.text_primary,
   lH = 16,
   weight = "regular",
   size = 14,

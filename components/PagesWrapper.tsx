@@ -1,10 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import React, { ReactNode } from "react";
-import { StyleSheet, View, StatusBar } from "react-native";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { StyleSheet, View, StatusBar, ScrollView } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface PageWrapperProps {
   bottom?: boolean;

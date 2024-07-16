@@ -22,6 +22,7 @@ export const Colors = {
     icon_primary: "#FFFFFF",
     text_primary: "#FFFFFF",
     background_content: "#1D2633",
+    background_content2: "#424C5C",
     background_content_tint: "#2E3847",
     accent_blue: "#45AEF5",
     accent_green: "#39CC83",

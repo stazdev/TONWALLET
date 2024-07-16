@@ -4,7 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
 
 interface IconButtonProps {
   icon: ReactNode;
-  onPress: () => void;
+  onPress?: () => void;
   style?: ViewStyle;
   size?: number;
   color?: string;

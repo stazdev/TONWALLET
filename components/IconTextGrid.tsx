@@ -1,5 +1,11 @@
-import React, { ReactNode } from "react";
-import { StyleSheet, FlatList, View, Dimensions } from "react-native";
+import React, { ReactNode, useMemo } from "react";
+import {
+  StyleSheet,
+  FlatList,
+  View,
+  Dimensions,
+  ListRenderItem,
+} from "react-native";
 import VerticalIconText from "./VerticalIconText";
 
 interface Item {
@@ -9,14 +15,18 @@ interface Item {
 
 interface IconTextGridProps {
   items: Item[];
+  numColumns?: number;
 }
 
-const numColumns = 3;
 const { width } = Dimensions.get("window");
-const itemWidth = (width - 40) / numColumns;
 
-const IconTextGrid: React.FC<IconTextGridProps> = ({ items }) => {
-  const renderItem = ({ item, index }: { item: Item; index: number }) => {
+const IconTextGrid: React.FC<IconTextGridProps> = ({
+  items,
+  numColumns = 3,
+}) => {
+  const itemWidth = useMemo(() => (width - 40) / numColumns, [numColumns]);
+
+  const renderItem: ListRenderItem<Item> = ({ item, index }) => {
     const isLastColumn = (index + 1) % numColumns === 0;
     const isFirstRow = index < numColumns;
     return (
@@ -32,11 +42,13 @@ const IconTextGrid: React.FC<IconTextGridProps> = ({ items }) => {
     );
   };
 
+  const keyExtractor = (item: Item, index: number) => `${item.name}-${index}`;
+
   return (
     <FlatList
       data={items}
       renderItem={renderItem}
-      keyExtractor={(item, index) => `${item.name}-${index}`}
+      keyExtractor={keyExtractor}
       numColumns={numColumns}
       contentContainerStyle={styles.container}
     />

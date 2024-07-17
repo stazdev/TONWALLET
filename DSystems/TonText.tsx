@@ -1,69 +1,49 @@
+import React from "react";
+import { Text, TextProps, StyleSheet, TextStyle } from "react-native";
 import { Colors } from "@/constants/Colors";
-import { Text, type TextProps, StyleSheet, TextStyle } from "react-native";
 
-export type TonTextProps = TextProps & {
+export interface TonTextProps extends Omit<TextProps, "style"> {
   color?: string;
   uistyle?: TextStyle;
   lH?: number;
   weight?: "bold" | "medium" | "regular" | "semibold";
   size?: number;
+}
+
+const fontFamilies = {
+  regular: "MontRegular",
+  medium: "MontMedium",
+  bold: "MontBold",
+  semibold: "MontSemiBold",
 };
 
-export function TonText({
+export const TonText: React.FC<TonTextProps> = ({
   uistyle,
   color = Colors.dark.text_primary,
-  lH = 16,
+  lH,
   weight = "regular",
   size = 14,
+  children,
   ...rest
-}: TonTextProps) {
-  let textWeightStyle = {};
-  switch (weight) {
-    case "regular":
-      textWeightStyle = styles.regular;
-      break;
-
-    case "medium":
-      textWeightStyle = styles.medium;
-      break;
-    case "semibold":
-      textWeightStyle = styles.semibold;
-      break;
-    case "bold":
-      textWeightStyle = styles.bold;
-      break;
-
-    default:
-      textWeightStyle = styles.regular;
-      break;
-  }
-
-  const mergeStyles = {
+}) => {
+  const textStyle: TextStyle = {
+    fontFamily: fontFamilies[weight],
+    color,
+    fontSize: size,
+    ...(lH && { lineHeight: lH }),
     ...uistyle,
-    ...textWeightStyle,
   };
 
   return (
     <Text
-      style={{ ...mergeStyles, lineHeight: lH, color, fontSize: size }}
+      style={textStyle}
       minimumFontScale={1}
       maxFontSizeMultiplier={1}
       {...rest}
-    />
+    >
+      {children}
+    </Text>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  regular: {
-    fontFamily: "MontRegular",
-  },
-  medium: {
-    fontFamily: "MontMedium",
-  },
-  bold: {
-    fontFamily: "MontBold",
-  },
-  semibold: {
-    fontFamily: "MontSemiBold",
-  },
-});
+export default TonText;

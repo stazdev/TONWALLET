@@ -12,6 +12,7 @@ import UsdIcon from "./UsdIcon";
 import StakeIcon from "./StakeIcon";
 import TonImg from "./TonImg";
 import UsdtImg from "./UsdtImg";
+import CloseIcon from "./CloseIcon";
 
 export {
   WalletIcon,
@@ -28,4 +29,5 @@ export {
   StakeIcon,
   TonImg,
   UsdtImg,
+  CloseIcon,
 };

@@ -1,24 +1,22 @@
+import React from "react";
+import { StyleSheet, View, ViewStyle } from "react-native";
 import { Colors } from "@/constants/Colors";
-import { TonText } from "@/DSystems/TonText";
-import React, { ReactNode } from "react";
-import {
-  StyleSheet,
-  View,
-  Image,
-  Text,
-  ViewStyle,
-  ImageSourcePropType,
-} from "react-native";
+import { TonText, TonTextProps } from "@/DSystems/TonText";
+
+type InfoCardTextProps = Omit<TonTextProps, "children"> & {
+  text: string;
+};
 
 interface InfoCardProps {
-  imageSource?: ReactNode;
-  leftTextTop?: string;
-  leftTextBottom?: string;
-  rightTextTop?: string;
-  rightTextBottom?: string;
+  imageSource?: React.ReactNode;
+  leftTextTop?: InfoCardTextProps;
+  leftTextBottom?: InfoCardTextProps;
+  rightTextTop?: InfoCardTextProps;
+  rightTextBottom?: InfoCardTextProps;
   containerStyle?: ViewStyle;
-  imageStyle?: ViewStyle;
-  textStyle?: ViewStyle;
+  textContainerStyle?: ViewStyle;
+  leftTextTopPill?: React.ReactNode;
+  rightComponent?: React.ReactNode; // New prop for custom right component
 }
 
 const InfoCard: React.FC<InfoCardProps> = ({
@@ -28,81 +26,68 @@ const InfoCard: React.FC<InfoCardProps> = ({
   rightTextTop,
   rightTextBottom,
   containerStyle,
-  imageStyle,
-  textStyle,
+  textContainerStyle,
+  leftTextTopPill,
+  rightComponent, // New prop
 }) => {
+  const renderText = (
+    textProps?: InfoCardTextProps,
+    pill?: React.ReactNode
+  ) => {
+    if (!textProps) return null;
+    const { text, ...rest } = textProps;
+    return (
+      <View style={styles.textWithPill}>
+        <TonText {...rest}>{text}</TonText>
+        {pill}
+      </View>
+    );
+  };
+
   return (
     <View style={[styles.container, containerStyle]}>
       {imageSource}
-      <View style={styles.textContainer}>
+      <View style={[styles.textContainer, textContainerStyle]}>
         <View style={styles.leftColumn}>
-          {leftTextTop && (
-            <TonText
-              size={16}
-              lH={24}
-              weight="semibold"
-              color={Colors.dark.text_primary}
-            >
-              {leftTextTop}
-            </TonText>
-          )}
-          {leftTextBottom && (
-            <TonText
-              size={14}
-              lH={20}
-              weight="medium"
-              color={Colors.dark.text_secondary}
-            >
-              {leftTextBottom}
-            </TonText>
-          )}
+          {renderText(leftTextTop, leftTextTopPill)}
+          {renderText(leftTextBottom)}
         </View>
-        <View style={styles.rightColumn}>
-          {rightTextTop && (
-            <TonText
-              size={16}
-              lH={24}
-              weight="semibold"
-              color={Colors.dark.text_primary}
-            >
-              {rightTextTop}
-            </TonText>
-          )}
-          {rightTextBottom && (
-            <TonText
-              size={14}
-              lH={20}
-              weight="medium"
-              color={Colors.dark.text_secondary}
-            >
-              {rightTextBottom}
-            </TonText>
-          )}
-        </View>
+        {rightComponent ? ( // Render custom right component if provided
+          <View style={styles.rightColumn}>{rightComponent}</View>
+        ) : (
+          <View style={styles.rightColumn}>
+            {renderText(rightTextTop)}
+            {renderText(rightTextBottom)}
+          </View>
+        )}
       </View>
     </View>
   );
 };
-
-export default InfoCard;
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
   },
-
   textContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     flex: 1,
+    marginLeft: 16,
   },
   leftColumn: {
     justifyContent: "center",
-    marginLeft: 16,
   },
   rightColumn: {
     justifyContent: "center",
-    marginLeft: 20,
+    alignItems: "flex-end",
+  },
+  textWithPill: {
+    flexDirection: "row",
+    gap: 4,
+    alignItems: "center",
   },
 });
+
+export default InfoCard;

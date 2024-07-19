@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     paddingVertical: 16,
+    marginHorizontal: 16,
   },
   indicator: {
     backgroundColor: Colors.dark.text_secondary,

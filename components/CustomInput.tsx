@@ -1,123 +1,194 @@
-import React, { useState, useRef } from 'react';
-import { StyleSheet, Text, View, TextInput, Animated, TouchableOpacity } from 'react-native';
+import React, { useState } from "react";
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TextInputProps,
+} from "react-native";
+import { useController, Control, FieldValues, Path } from "react-hook-form";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  interpolate,
+  interpolateColor,
+} from "react-native-reanimated";
+import { Colors } from "@/constants/Colors";
 
-interface Icon {
-  name: string;
-  onPress: () => void;
+interface IconProps {
+  component: React.ReactNode;
+  onPress?: () => void;
 }
 
-interface CustomInputProps {
+interface CustomInputProps<T extends FieldValues> extends TextInputProps {
+  name: Path<T>;
+  control: Control<T>;
+  rules?: any;
   placeholder: string;
-  value: string;
-  onChangeText: (text: string) => void;
-  validate: (text: string) => boolean;
-  icons?: Icon[];
+  leftIcon?: IconProps;
+  rightIcons?: IconProps[];
+  secureTextEntry?: boolean;
 }
 
-const CustomInput: React.FC<CustomInputProps> = ({ placeholder, value, onChangeText, validate, icons }) => {
+function CustomInput<T extends FieldValues>({
+  name,
+  control,
+  rules,
+  placeholder,
+  leftIcon,
+  rightIcons,
+  secureTextEntry = false,
+  ...textInputProps
+}: CustomInputProps<T>): React.ReactElement {
   const [isFocused, setIsFocused] = useState(false);
-  const [isValid, setIsValid] = useState(true);
-  const animatedPlaceholder = useRef(new Animated.Value(value ? 1 : 0)).current;
+  const [isPasswordVisible, setIsPasswordVisible] = useState(!secureTextEntry);
+
+  const {
+    field: { onChange, onBlur, value },
+    fieldState: { error },
+  } = useController({
+    name,
+    control,
+    rules,
+  });
+
+  const animation = useSharedValue(0);
+
+  const animatedPlaceholderStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: interpolate(animation.value, [0, 1], [0, -14]),
+        },
+      ],
+      fontSize: interpolate(animation.value, [0, 1], [16, 12]),
+      color: interpolateColor(
+        animation.value,
+        [0, 1],
+        [Colors.dark.text_secondary, Colors.dark.text_secondary]
+      ),
+    };
+  });
 
   const handleFocus = () => {
     setIsFocused(true);
-    Animated.timing(animatedPlaceholder, {
-      toValue: 1,
-      duration: 200,
-      useNativeDriver: false,
-    }).start();
+    animation.value = withTiming(1, { duration: 200 });
   };
 
   const handleBlur = () => {
     setIsFocused(false);
     if (!value) {
-      Animated.timing(animatedPlaceholder, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: false,
-      }).start();
+      animation.value = withTiming(0, { duration: 200 });
     }
+    onBlur();
   };
 
-  const handleChangeText = (text: string) => {
-    onChangeText(text);
-    setIsValid(validate(text));
-  };
-
-  const placeholderStyle = {
-    transform: [
-      {
-        translateY: animatedPlaceholder.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, -25],
-        }),
-      },
-    ],
-    fontSize: animatedPlaceholder.interpolate({
-      inputRange: [0, 1],
-      outputRange: [16, 12],
-    }),
-    color: animatedPlaceholder.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['#888', '#444'],
-    }),
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible((prev) => !prev);
   };
 
   return (
-    <View style={[styles.container, isValid ? styles.validBorder : styles.invalidBorder]}>
-      <Animated.Text style={[styles.placeholder, placeholderStyle]}>{placeholder}</Animated.Text>
-      <TextInput
-        style={styles.input}
-        value={value}
-        onChangeText={handleChangeText}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-      />
-      {icons && (
-        <View style={styles.iconsContainer}>
-          {icons.map((icon, index) => (
-            <TouchableOpacity key={index} onPress={icon.onPress} style={styles.iconButton}>
-              <Text>{icon.name}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
-    </View>
+    <>
+      <View style={[styles.container, error && styles.errorContainer]}>
+        {leftIcon && (
+          <TouchableOpacity style={styles.leftIcon} onPress={leftIcon.onPress}>
+            {leftIcon.component}
+          </TouchableOpacity>
+        )}
+        <Animated.Text style={[styles.placeholder, animatedPlaceholderStyle]}>
+          {placeholder}
+        </Animated.Text>
+        <TextInput
+          style={[
+            styles.input,
+            leftIcon && styles.inputWithLeftIcon,
+            rightIcons && styles.inputWithRightIcon,
+          ]}
+          value={value as string}
+          onChangeText={onChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          secureTextEntry={!isPasswordVisible && secureTextEntry}
+          {...textInputProps}
+        />
+        {rightIcons && (
+          <View style={styles.rightIconsContainer}>
+            {rightIcons.map((icon, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.rightIcon}
+                onPress={
+                  index === 0 && secureTextEntry
+                    ? togglePasswordVisibility
+                    : icon.onPress
+                }
+              >
+                {icon.component}
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+      </View>
+      <View style={{ marginHorizontal: 16 }}>
+        {error && <Text style={styles.errorText}>{error.message}</Text>}
+      </View>
+    </>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
+    marginHorizontal: 16,
+    marginVertical: 12,
     borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingTop: 15,
-    marginBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
+    borderColor: Colors.dark.accent_blue,
+    borderRadius: 16,
+    // paddingHorizontal: 12,
+    paddingVertical: 4,
+    position: "relative",
   },
-  validBorder: {
-    borderColor: 'green',
-  },
-  invalidBorder: {
-    borderColor: 'red',
+  errorContainer: {
+    borderColor: Colors.dark.accent_red,
   },
   input: {
-    flex: 1,
+    color: Colors.dark.text_primary,
     fontSize: 16,
-    paddingVertical: 5,
+    padding: 16,
+    // paddingBottom: 8,
+  },
+  inputWithLeftIcon: {
+    paddingLeft: 36,
+  },
+  inputWithRightIcon: {
+    paddingRight: 72,
   },
   placeholder: {
-    position: 'absolute',
-    left: 10,
-    top: 17,
+    position: "absolute",
+    left: 12,
+    top: 20,
+    fontSize: 16,
+    color: Colors.dark.text_secondary,
   },
-  iconsContainer: {
-    flexDirection: 'row',
+  leftIcon: {
+    position: "absolute",
+    left: 12,
+    top: 20,
   },
-  iconButton: {
-    padding: 5,
-    marginLeft: 5,
+  rightIconsContainer: {
+    flexDirection: "row",
+    position: "absolute",
+    right: 12,
+    top: 20,
+  },
+  rightIcon: {
+    marginLeft: 12,
+  },
+  errorText: {
+    color: Colors.dark.accent_red,
+    fontSize: 12,
+    marginTop: 4,
   },
 });
 

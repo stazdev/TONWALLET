@@ -28,9 +28,9 @@ const CircularIconButton: React.FC<CircularIconButtonProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     padding: 10,
     backgroundColor: Colors.dark.background_content,
     justifyContent: "center",

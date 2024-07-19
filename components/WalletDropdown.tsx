@@ -18,7 +18,7 @@ const WalletDropdown: React.FC<WalletDropdownProps> = ({
   onPress,
   label = "Wallet",
   icon,
-  backgroundColor = Colors.dark.background_content2,
+  backgroundColor = Colors.dark.background_content,
   textColor = Colors.dark.text_primary,
   chevronColor = Colors.dark.text_secondary,
   chevron = false,

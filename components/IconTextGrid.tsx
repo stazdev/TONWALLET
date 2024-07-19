@@ -11,7 +11,7 @@ import { router } from "expo-router";
 
 interface Item {
   name: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
   path: string;
 }
 

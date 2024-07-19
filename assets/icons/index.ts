@@ -19,6 +19,7 @@ import PlusIcon from "./PlusIcon";
 import SearchIcon from "./SearchIcon";
 import TargetIcon from "./TargetIcon";
 import SquareIcon from "./SquareIcon";
+import MoreHorizIcon from "./MoreHorizIcon";
 
 export {
   WalletIcon,
@@ -42,4 +43,5 @@ export {
   SearchIcon,
   TargetIcon,
   SquareIcon,
+  MoreHorizIcon,
 };

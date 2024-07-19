@@ -7,15 +7,21 @@ interface VerticalIconTextProps {
   name: string;
   icon: React.ReactNode;
   width: number;
+  onPress?: () => void;
 }
 
 const VerticalIconText: React.FC<VerticalIconTextProps> = ({
   name,
   icon,
   width,
+  onPress,
 }) => {
   return (
-    <TouchableOpacity style={[styles.item, { width }]} activeOpacity={0.7}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[styles.item, { width }]}
+      activeOpacity={0.7}
+    >
       {icon}
       <TonText color={Colors.dark.text_secondary} size={14} weight="medium">
         {name}

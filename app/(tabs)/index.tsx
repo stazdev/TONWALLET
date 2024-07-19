@@ -10,9 +10,10 @@ import {
   TonImg,
   UsdIcon,
   UsdtImg,
-  WalletIcon,
+  WalletIconLight,
 } from "@/assets/icons";
 import {
+  AddWalletModal,
   HorizontalLine,
   IconTextGrid,
   InfoCard,
@@ -22,35 +23,18 @@ import {
 } from "@/components";
 import PageWrapper from "@/components/PagesWrapper";
 import Header from "@/components/Header";
-import { TonText, TonTextProps } from "@/DSystems/TonText";
+import { TonText } from "@/DSystems/TonText";
 import { Colors } from "@/constants/Colors";
 import TonModal from "@/DSystems/TonModal";
-// import CustomModal from "@/components/CustomModal";
-
-interface WalletAction {
-  name: string;
-  icon: React.ReactNode;
-}
-
-interface WalletToken {
-  imageSource: React.ReactNode;
-  name: string;
-  price: string;
-  amount: string;
-  value: string;
-}
-
-type InfoCardTextProps = Omit<TonTextProps, "children"> & {
-  text: string;
-};
+import { WalletAction, WalletToken } from "@/interfaces";
 
 const WALLET_ACTIONS: WalletAction[] = [
-  { name: "Send", icon: <ArrowUpIcon /> },
-  { name: "Receive", icon: <ArrowDownIcon /> },
-  { name: "Scan", icon: <ScanIcon /> },
-  { name: "Swap", icon: <SwapIcon /> },
-  { name: "Buy or Sell", icon: <UsdIcon /> },
-  { name: "Stake", icon: <StakeIcon /> },
+  { name: "Send", icon: <ArrowUpIcon />, path: "sendScreen" },
+  { name: "Receive", icon: <ArrowDownIcon />, path: "receiveScreen" },
+  { name: "Scan", icon: <ScanIcon />, path: "scanScreen" },
+  { name: "Swap", icon: <SwapIcon />, path: "swapScreen" },
+  { name: "Buy or Sell", icon: <UsdIcon />, path: "buyScreen" },
+  { name: "Stake", icon: <StakeIcon />, path: "stakeScreen" },
 ];
 
 const WALLET_TOKENS: WalletToken[] = [
@@ -71,52 +55,52 @@ const WALLET_TOKENS: WalletToken[] = [
 ];
 
 const Wallet: React.FC = () => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isAddWalletModalVisible, setIsAddWalletModalVisible] = useState(false);
+  const [isWalletModalVisible, setIsWalletModalVisible] =
+    useState<boolean>(false);
+  const [isAddWalletModalVisible, setIsAddWalletModalVisible] =
+    useState<boolean>(false);
+  const [isEnabled, setIsEnabled] = useState<boolean>(true);
 
-  const openModal = () => setIsModalVisible(true);
-  const closeModal = () => setIsModalVisible(false);
+  const openWalletModal = () => setIsWalletModalVisible(true);
+  const closeWalletModal = () => setIsWalletModalVisible(false);
   const openAddWalletModal = () => {
-    closeModal();
+    closeWalletModal();
     setIsAddWalletModalVisible(true);
   };
   const closeAddWalletModal = () => setIsAddWalletModalVisible(false);
-  const [isEnabled, setIsEnabled] = useState(true);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
-  const renderTokenInfo = (token: WalletToken, index: number) => {
-    const createTextProps = (
-      text: string,
-      isPrimary: boolean
-    ): InfoCardTextProps => ({
-      text,
-      size: isPrimary ? 16 : 14,
-      lH: isPrimary ? 24 : 20,
-      weight: isPrimary ? "semibold" : "medium",
-      color: isPrimary ? Colors.dark.text_primary : Colors.dark.text_secondary,
-    });
 
-    return (
-      <React.Fragment key={token.name}>
-        {index > 0 && <HorizontalLine />}
-        <InfoCard
-          imageSource={token.imageSource}
-          leftTextTop={createTextProps(token.name, true)}
-          leftTextBottom={createTextProps(token.price, false)}
-          rightTextTop={createTextProps(token.amount, true)}
-          rightTextBottom={createTextProps(token.value, false)}
-          leftTextTopPill={
-            token.name === "USD₮" ? (
-              <Pill
-                text="TON"
-                backgroundColor="grey"
-                style={{ marginRight: 8 }}
-              />
-            ) : undefined
-          }
-        />
-      </React.Fragment>
-    );
-  };
+  const renderTokenInfo = (token: WalletToken, index: number) => (
+    <React.Fragment key={token.name}>
+      {index > 0 && <HorizontalLine />}
+      <InfoCard
+        imageSource={token.imageSource}
+        leftTextTop={{ text: token.name, size: 16, weight: "semibold" }}
+        leftTextBottom={{
+          text: token.price,
+          size: 14,
+          weight: "medium",
+          color: Colors.dark.text_secondary,
+        }}
+        rightTextTop={{ text: token.amount, size: 16, weight: "semibold" }}
+        rightTextBottom={{
+          text: token.value,
+          size: 14,
+          weight: "medium",
+          color: Colors.dark.text_secondary,
+        }}
+        leftTextTopPill={
+          token.name === "USD₮" ? (
+            <Pill
+              text="TON"
+              backgroundColor="grey"
+              style={{ marginRight: 8 }}
+            />
+          ) : undefined
+        }
+      />
+    </React.Fragment>
+  );
 
   return (
     <PageWrapper>
@@ -124,8 +108,8 @@ const Wallet: React.FC = () => {
         middleComponent={
           <WalletDropdown
             chevron={true}
-            onPress={openModal}
-            icon={<WalletIcon focused={undefined} />}
+            onPress={openWalletModal}
+            icon={<WalletIconLight />}
           />
         }
         rightComponent={
@@ -137,7 +121,7 @@ const Wallet: React.FC = () => {
       />
       <View style={styles.walletBalance}>
         <TonText size={44} weight="semibold" lH={56}>
-          $700,000
+          $0.23
         </TonText>
         <TonText
           size={14}
@@ -145,27 +129,29 @@ const Wallet: React.FC = () => {
           lH={20}
           color={Colors.dark.text_secondary}
         >
-          EQF2…G21Z
+          UQCg...5De0
         </TonText>
       </View>
       <View>
         <IconTextGrid items={WALLET_ACTIONS} />
       </View>
       <ViewWrapper>{WALLET_TOKENS.map(renderTokenInfo)}</ViewWrapper>
+
       <TonModal
-        isVisible={isModalVisible}
-        onClose={closeModal}
+        isVisible={isWalletModalVisible}
+        onClose={closeWalletModal}
         title="Wallets"
         scrollable={true}
         initialSnapPoint="25%"
-        maxSnapPoint="40%"
+        maxSnapPoint="35%"
       >
         <ViewWrapper>
           <InfoCard
-            imageSource={<WalletIcon focused={undefined} />}
-            leftTextTop={{ text: "Main Wallet", size: 16, weight: "semibold" }}
+            imageSource={<WalletIconLight />}
+            imgbg={true}
+            leftTextTop={{ text: "Wallet 2", size: 16, weight: "semibold" }}
             leftTextBottom={{
-              text: "EQF2…G21Z",
+              text: "UQCg...5De0",
               size: 14,
               weight: "medium",
               color: Colors.dark.text_secondary,
@@ -188,13 +174,7 @@ const Wallet: React.FC = () => {
             }
           />
         </ViewWrapper>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            marginVertical: 30,
-          }}
-        >
+        <View style={styles.addWalletContainer}>
           <WalletDropdown
             onPress={openAddWalletModal}
             label="Add wallet"
@@ -202,18 +182,11 @@ const Wallet: React.FC = () => {
           />
         </View>
       </TonModal>
-      <TonModal
+
+      <AddWalletModal
         isVisible={isAddWalletModalVisible}
         onClose={closeAddWalletModal}
-        title="Add Wallet"
-        scrollable={true}
-        initialSnapPoint="25%"
-        maxSnapPoint="40%"
-      >
-        <ViewWrapper>
-          <TonText>Add Wallet Modal Content</TonText>
-        </ViewWrapper>
-      </TonModal>
+      />
     </PageWrapper>
   );
 };
@@ -222,8 +195,35 @@ const styles = StyleSheet.create({
   walletBalance: {
     justifyContent: "center",
     alignItems: "center",
-    marginVertical: 28,
-    gap: 4,
+    marginVertical: 20,
+  },
+  addWalletContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginVertical: 30,
+  },
+  modalContainer: {
+    padding: 16,
+  },
+  optionContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: Colors.dark.background_content,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+  },
+  optionIconContainer: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.dark.background_page,
+    borderRadius: 20,
+    marginRight: 12,
+  },
+  optionTextContainer: {
+    flex: 1,
   },
 });
 

@@ -40,6 +40,7 @@ export default function RootLayout() {
         <BottomSheetModalProvider>
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="sendScreen" options={{ headerShown: false }} />
           </Stack>
         </BottomSheetModalProvider>
       </ThemeProvider>

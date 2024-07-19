@@ -10,6 +10,9 @@ import HorizontalLine from "./HorizontalLine";
 import Pill from "./Pill";
 import WalletDropdown from "./WalletDropdown";
 import CircularIconButton from "./CircularIconButton";
+import CustomInput from "./CustomInput";
+import AddWalletOption from "./AddWalletOption";
+import AddWalletModal from "./AddWalletModal";
 
 export {
   Header,
@@ -24,4 +27,7 @@ export {
   Pill,
   WalletDropdown,
   CircularIconButton,
+  CustomInput,
+  AddWalletOption,
+  AddWalletModal,
 };

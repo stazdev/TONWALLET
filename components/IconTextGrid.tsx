@@ -7,10 +7,12 @@ import {
   ListRenderItem,
 } from "react-native";
 import VerticalIconText from "./VerticalIconText";
+import { router } from "expo-router";
 
 interface Item {
   name: string;
-  icon: ReactNode;
+  icon: React.ReactNode;
+  path: string;
 }
 
 interface IconTextGridProps {
@@ -37,7 +39,12 @@ const IconTextGrid: React.FC<IconTextGridProps> = ({
           !isFirstRow && styles.itemTopBorder,
         ]}
       >
-        <VerticalIconText name={item.name} icon={item.icon} width={itemWidth} />
+        <VerticalIconText
+          onPress={() => router.push(item.path)}
+          name={item.name}
+          icon={item.icon}
+          width={itemWidth}
+        />
       </View>
     );
   };

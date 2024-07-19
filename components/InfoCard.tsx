@@ -16,7 +16,8 @@ interface InfoCardProps {
   containerStyle?: ViewStyle;
   textContainerStyle?: ViewStyle;
   leftTextTopPill?: React.ReactNode;
-  rightComponent?: React.ReactNode; // New prop for custom right component
+  rightComponent?: React.ReactNode;
+  imgbg?: boolean;
 }
 
 const InfoCard: React.FC<InfoCardProps> = ({
@@ -28,7 +29,8 @@ const InfoCard: React.FC<InfoCardProps> = ({
   containerStyle,
   textContainerStyle,
   leftTextTopPill,
-  rightComponent, // New prop
+  rightComponent,
+  imgbg = false,
 }) => {
   const renderText = (
     textProps?: InfoCardTextProps,
@@ -46,13 +48,26 @@ const InfoCard: React.FC<InfoCardProps> = ({
 
   return (
     <View style={[styles.container, containerStyle]}>
-      {imageSource}
+      {imgbg ? (
+        <View
+          style={{
+            backgroundColor: Colors.dark.background_page,
+            borderRadius: 50,
+            padding: 10,
+          }}
+        >
+          {imageSource}
+        </View>
+      ) : (
+        imageSource
+      )}
+
       <View style={[styles.textContainer, textContainerStyle]}>
         <View style={styles.leftColumn}>
           {renderText(leftTextTop, leftTextTopPill)}
           {renderText(leftTextBottom)}
         </View>
-        {rightComponent ? ( // Render custom right component if provided
+        {rightComponent ? (
           <View style={styles.rightColumn}>{rightComponent}</View>
         ) : (
           <View style={styles.rightColumn}>

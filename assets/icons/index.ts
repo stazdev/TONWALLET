@@ -13,6 +13,12 @@ import StakeIcon from "./StakeIcon";
 import TonImg from "./TonImg";
 import UsdtImg from "./UsdtImg";
 import CloseIcon from "./CloseIcon";
+import WalletIconLight from "./WalletIconLight";
+import ChevronRightIcon from "./ChevronRightIcon";
+import PlusIcon from "./PlusIcon";
+import SearchIcon from "./SearchIcon";
+import TargetIcon from "./TargetIcon";
+import SquareIcon from "./SquareIcon";
 
 export {
   WalletIcon,
@@ -30,4 +36,10 @@ export {
   TonImg,
   UsdtImg,
   CloseIcon,
+  WalletIconLight,
+  ChevronRightIcon,
+  PlusIcon,
+  SearchIcon,
+  TargetIcon,
+  SquareIcon,
 };

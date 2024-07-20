@@ -140,7 +140,7 @@ function CustomInput<T extends FieldValues>({
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 16,
+    // marginHorizontal: 16,
     marginVertical: 12,
     borderWidth: 1,
     borderColor: Colors.dark.accent_blue,

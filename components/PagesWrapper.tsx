@@ -23,6 +23,7 @@ const PageWrapper: React.FC<PageWrapperProps> = ({
         paddingTop: top ? insets.top : 0,
         backgroundColor: Colors.dark.background_page,
         paddingBottom: bottom ? insets.bottom : 0,
+        paddingHorizontal: 16,
       }}
     >
       <StatusBar animated={true} barStyle="light-content" />

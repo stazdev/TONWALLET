@@ -10,7 +10,7 @@ import {
 import { Colors } from "@/constants/Colors";
 import { TonText } from "@/DSystems/TonText";
 import PageWrapper from "@/components/PagesWrapper";
-import { CircularIconButton, WalletDropdown } from "@/components";
+import { CircularIconButton, Header, WalletDropdown } from "@/components";
 import { CloseIcon, SearchIcon } from "@/assets/icons";
 import { router } from "expo-router";
 
@@ -19,12 +19,14 @@ const ReceiveScreen = () => {
 
   return (
     <PageWrapper>
-      <View style={styles.header}>
-        <CircularIconButton
-          icon={<CloseIcon />}
-          onPress={() => router.back()}
-        />
-      </View>
+      <Header
+        leftComponent={
+          <CircularIconButton
+            icon={<CloseIcon />}
+            onPress={() => router.back()}
+          />
+        }
+      />
       <View style={styles.container}>
         <TonText size={20} weight="bold" lH={28}>
           Receive Toncoin
@@ -58,13 +60,9 @@ const ReceiveScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  header: {
-    padding: 16,
-  },
   container: {
     flex: 1,
     alignItems: "center",
-    paddingHorizontal: 16,
     rowGap: 30,
   },
 

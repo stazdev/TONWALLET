@@ -100,11 +100,11 @@ const TonModal: React.FC<TonModalProps> = ({
       backdropComponent={renderBackdrop}
       backgroundStyle={[styles.background, containerStyle]}
     >
-      {renderHeader()}
       <ContentWrapper
         style={[styles.contentContainer, contentContainerStyle]}
         contentContainerStyle={{ paddingBottom: bottom }}
       >
+        {renderHeader()}
         {children}
       </ContentWrapper>
     </BottomSheet>
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    paddingVertical: 16,
+    // paddingVertical: 16,
     marginHorizontal: 16,
   },
   indicator: {

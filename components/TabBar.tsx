@@ -83,7 +83,8 @@ function TabBar({ state, descriptors, navigation }: any) {
                   flex: 1,
                   alignItems: "center",
                   justifyContent: "center",
-                  paddingVertical: 8,
+                  paddingTop: 8,
+                  paddingBottom: 14,
                   paddingHorizontal: 4,
                   rowGap: 4,
                 }}

@@ -67,7 +67,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 8,
     marginVertical: 8,
-    marginHorizontal: 16,
   },
   text: {
     fontSize: 16,

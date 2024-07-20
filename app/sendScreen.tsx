@@ -135,12 +135,12 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   recentContainer: {
-    marginHorizontal: 16,
+    // marginHorizontal: 16,
     marginTop: 32,
   },
   recentItem: {
     backgroundColor: Colors.dark.background_content,
-    padding: 16,
+    // padding: 16,
     borderRadius: 8,
     marginTop: 8,
   },

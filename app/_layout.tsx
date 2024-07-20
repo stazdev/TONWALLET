@@ -45,6 +45,7 @@ export default function RootLayout() {
               name="receiveScreen"
               options={{ headerShown: false }}
             />
+            <Stack.Screen name="scanScreen" options={{ headerShown: false }} />
           </Stack>
         </BottomSheetModalProvider>
       </ThemeProvider>

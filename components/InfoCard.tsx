@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, ViewStyle } from "react-native";
+import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { TonText, TonTextProps } from "@/DSystems/TonText";
 
@@ -45,7 +45,7 @@ const InfoCard: React.FC<InfoCardProps> = ({
       </View>
     );
   };
-
+  // const Wrap = true ? View : TouchableOpacity
   return (
     <View style={[styles.container, containerStyle]}>
       {imgbg ? (

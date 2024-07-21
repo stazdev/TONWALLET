@@ -17,8 +17,6 @@ export let TabIcon = (name: string, focused: boolean) => {
       return <HistoryIcon focused={focused} />;
     case "Browser":
       return <BrowserIcon focused={focused} />;
-    case "Purchases":
-      return <PurchaseIcon focused={focused} />;
   }
 };
 function TabBar({ state, descriptors, navigation }: any) {

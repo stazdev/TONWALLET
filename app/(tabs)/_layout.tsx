@@ -1,7 +1,6 @@
 import { Tabs } from "expo-router";
 import React from "react";
 
-import { Colors } from "@/constants/Colors";
 import TabBar from "@/components/TabBar";
 export default function TabLayout() {
   return (
@@ -27,12 +26,6 @@ export default function TabLayout() {
         name="browser"
         options={{
           title: "Browser",
-        }}
-      />
-      <Tabs.Screen
-        name="purchases"
-        options={{
-          title: "Purchases",
         }}
       />
     </Tabs>
